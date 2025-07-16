@@ -1,0 +1,58 @@
+.
+├── next-env.d.ts
+├── next.config.mjs
+├── package-lock.json
+├── package.json
+├── postcss.config.mjs
+├── project-structure.txt
+├── public
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── next.svg
+│   ├── vercel.svg
+│   └── window.svg
+├── README.md
+├── src
+│   ├── app
+│   │   ├── api
+│   │   │   ├── agent
+│   │   │   ├── portfolio
+│   │   │   └── strategies
+│   │   ├── favicon.ico
+│   │   ├── fonts
+│   │   │   ├── GeistMonoVF.woff
+│   │   │   └── GeistVF.woff
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   └── providers.tsx
+│   ├── chains.ts
+│   ├── components
+│   │   ├── ChatBox.tsx
+│   │   ├── NavBar.tsx
+│   │   └── StrategyCard.tsx
+│   ├── configs
+│   │   └── index.tsx
+│   ├── constants
+│   │   ├── abi.ts
+│   │   └── index.ts
+│   ├── context
+│   │   └── providers.tsx
+│   ├── hooks
+│   │   └── usePortfolio.ts
+│   └── lib
+│       ├── ai
+│       │   ├── AIMemoryAgent.ts
+│       │   ├── patternAnalyzer.ts
+│       │   └── strategyEngine.ts
+│       ├── contracts
+│       │   ├── abis
+│       │   └── index.ts
+│       ├── supabase
+│       │   └── supabase.ts
+│       └── web3
+│           └── ethers.ts
+├── tailwind.config.ts
+└── tsconfig.json
+
+20 directories, 36 files

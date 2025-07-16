@@ -1,3 +1,4 @@
+// src/app/api/portfolio/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { ethers } from 'ethers';
 import { BDAG_TESTNET } from '@/lib/contracts';

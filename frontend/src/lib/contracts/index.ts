@@ -1,3 +1,4 @@
+// src/lib/contracts/index.ts
 export const BDAG_TESTNET = {
   chainId: 1043,
   rpc: process.env.NEXT_PUBLIC_BLOCKDAG_TESTNET_RPC!,
@@ -10,5 +11,6 @@ export const BDAG_TESTNET = {
     LendingPool: '0x7D21ABD79377D95A16Fe6b4d6441703b6Da411BC',
     Staking: '0xc1d833984d7364437F2d8CcE827f1Cac3A8AD911',
     PortfolioTracker: '0x6F2291B12c5Bd42C7b7385D0a33C86644020A2Da',
+    MultiTokenPriceOracle: '0x55a36C107e7E609eb3D2DFDbd15B11102FA5D923',
   },
 };

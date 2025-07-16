@@ -1,3 +1,4 @@
+// src/app/page.tsx
 'use client';
 
 import ChatBox from '@/components/ChatBox';

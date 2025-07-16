@@ -1,3 +1,4 @@
+// src/components/StrategyCard.tsx
 'use client';
 import { usePortfolio } from '@/hooks/usePortfolio';
 import { useAccount } from 'wagmi';
