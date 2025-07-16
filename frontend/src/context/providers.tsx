@@ -1,10 +1,9 @@
-// src/context/providers.tsx  (rename from Web3Modal.tsx)
-"use client";
+'use client';
 
-import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { WagmiProvider } from "wagmi";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { config } from "@/configs"; // wagmi config (injected wallets only)
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { WagmiProvider } from 'wagmi';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { config } from '@/configs'; // wagmi config (with injected only)
 
 const queryClient = new QueryClient();
 
@@ -18,7 +17,7 @@ export default function Providers({
   return (
     <WagmiProvider config={config} initialState={initialState}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider> {/* ← required */}
+        <RainbowKitProvider> {/*  ← required */}
           {children}
         </RainbowKitProvider>
       </QueryClientProvider>

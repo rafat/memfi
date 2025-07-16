@@ -1,0 +1,297 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_ammPair",
+        "type": "address"
+      }
+    ],
+    "name": "getAMMPosition",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "ammPair",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lpBalance",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "token0",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "token1",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "reserve0",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "reserve1",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct PortfolioTracker.AMMPosition",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_ammPairs",
+        "type": "address[]"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_lendingPools",
+        "type": "address[]"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_stakingPools",
+        "type": "address[]"
+      }
+    ],
+    "name": "getFullPortfolio",
+    "outputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "ammPair",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "lpBalance",
+                "type": "uint256"
+              },
+              {
+                "internalType": "address",
+                "name": "token0",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "token1",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "reserve0",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "reserve1",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct PortfolioTracker.AMMPosition[]",
+            "name": "ammPositions",
+            "type": "tuple[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "lendingPool",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "collateralToken",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "collateralAmount",
+                "type": "uint256"
+              },
+              {
+                "internalType": "address",
+                "name": "borrowToken",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "borrowedAmount",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct PortfolioTracker.LendingPosition[]",
+            "name": "lendingPositions",
+            "type": "tuple[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "stakingPool",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "stakingToken",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "stakedAmount",
+                "type": "uint256"
+              },
+              {
+                "internalType": "address",
+                "name": "rewardToken",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "pendingRewards",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct PortfolioTracker.StakingPosition[]",
+            "name": "stakingPositions",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct PortfolioTracker.FullPortfolio",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_lendingPool",
+        "type": "address"
+      }
+    ],
+    "name": "getLendingPosition",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "lendingPool",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "collateralToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "collateralAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "borrowToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "borrowedAmount",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct PortfolioTracker.LendingPosition",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_stakingPool",
+        "type": "address"
+      }
+    ],
+    "name": "getStakingPosition",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "stakingPool",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "stakingToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "stakedAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "rewardToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pendingRewards",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct PortfolioTracker.StakingPosition",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
