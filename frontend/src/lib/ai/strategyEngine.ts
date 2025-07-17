@@ -1,6 +1,7 @@
 // src/lib/ai/strategyEngine.ts
-
+import { WalletBalances } from '@/hooks/useUserWallet';
 import { Tables } from '@/lib/supabase/database.types';
+import { ethers } from 'ethers';
 
 // Define simplified types for clarity
 type LearnedPattern = Tables<'learned_patterns'>;
@@ -17,10 +18,12 @@ export interface NLPIntent {
 export class StrategyEngine {
   private intent: NLPIntent;
   private patterns: LearnedPattern | null;
+  private balances: WalletBalances;
 
-  constructor(intent: NLPIntent, patterns: LearnedPattern | null) {
+  constructor(intent: NLPIntent, patterns: LearnedPattern | null, balances: WalletBalances) {
     this.intent = intent;
     this.patterns = patterns;
+    this.balances = balances;
   }
 
   public generateStrategy(): { title: string; steps: StrategyStep[] } | null {
@@ -34,45 +37,44 @@ export class StrategyEngine {
   }
 
   private buildYieldStrategy(): { title: string; steps: StrategyStep[] } {
-    // This is where the "AI" logic lives. We use patterns to personalize the strategy.
-    // For this MVP, we'll use a simple rule-based system.
-
     const steps: StrategyStep[] = [];
-    let title = 'Recommended Yield Strategy';
+    let title = 'Personalized Yield Strategy';
 
-    // Simple personalization: if user is high-risk, suggest a more complex strategy.
-    if (this.patterns?.risk_bucket === 'high') {
-      title = 'Aggressive Yield on MBTC';
-      steps.push({
-        step_order: 1,
-        protocol: 'lending',
-        action: 'lend',
-        token_in: 'MBTC', // Lend their most valuable asset
-        token_out: null,
-        amount_in: 1, // Example amount
-        amount_out: null,
-      });
-      steps.push({
-        step_order: 2,
-        protocol: 'staking',
-        action: 'stake',
-        token_in: 'METH', // Stake their other asset
-        token_out: null,
-        amount_in: 5, // Example amount
-        amount_out: null,
-      });
-    } else {
-      // Default low-risk strategy: just stake their most valuable asset.
-      title = 'Low-Risk Staking on MBTC';
+    // <<< NEW: Personalized logic based on user's actual holdings
+    const mbtcBalance = this.balances.mbtc;
+    const methBalance = this.balances.meth;
+    const hasSignificantMbtc = mbtcBalance > ethers.parseUnits("0.1", 18); // e.g., > 0.1 MBTC
+
+    if (hasSignificantMbtc) {
+      title = `Low-Risk Staking on your ${ethers.formatEther(mbtcBalance)} MBTC`;
+      // Suggest staking 50% of their MBTC balance
+      const stakeAmount = mbtcBalance / 2n;
+      
       steps.push({
         step_order: 1,
         protocol: 'staking',
         action: 'stake',
         token_in: 'MBTC',
         token_out: null,
-        amount_in: 10, // Suggest a larger, safer position
+        amount_in: stakeAmount.toString(), // Store as string
         amount_out: null,
       });
+    } else if (methBalance > ethers.parseUnits("1", 18)) {
+      title = 'Lend your METH to earn yield';
+      const lendAmount = methBalance / 2n;
+       steps.push({
+        step_order: 1,
+        protocol: 'lending',
+        action: 'lend',
+        token_in: 'METH',
+        token_out: null,
+        amount_in: lendAmount.toString(),
+        amount_out: null,
+      });
+    } else {
+        // Fallback if user has low balances
+        title = 'Acquire Assets for Yield';
+        return {title, steps: []} // Return empty steps
     }
 
     return { title, steps };

@@ -5,6 +5,10 @@ import { ethers } from 'ethers';
 import { BDAG_TESTNET } from '@/lib/contracts';
 import { PatternAnalyzer } from './patternAnalyzer';
 import { NLPIntent, StrategyEngine } from './strategyEngine';
+import { createUserWalletFetcher, WalletBalances } from '@/hooks/useUserWallet';
+import { Tables } from '@/lib/supabase/database.types';
+import type { Address } from 'viem';
+
 
 // A placeholder for a real NLP service call
 async function recognizeIntent(command: string): Promise<NLPIntent> {
@@ -27,10 +31,12 @@ async function recognizeIntent(command: string): Promise<NLPIntent> {
 
 export class AIMemoryAgent {
   private userAddress: string;
+  private walletFetcher: ReturnType<typeof createUserWalletFetcher>;
 
   constructor(userAddress: string) {
     // Always work with checksummed address
     this.userAddress = ethers.getAddress(userAddress);
+    this.walletFetcher = createUserWalletFetcher();
   }
 
   // MVP Feature 1 & 7: Sync on-chain history
@@ -78,6 +84,7 @@ export class AIMemoryAgent {
 
   // MVP Feature 3, 4, 5: Handle NL command -> Recommend -> Preview
   public async handleCommand(command: string): Promise<any> {
+    const walletBalances = await this.walletFetcher.getBalances(this.userAddress as Address);
     const intent = await recognizeIntent(command);
     if (intent.intent === 'unknown') {
       return { type: 'reply', message: "I'm not sure how to handle that. Try asking me to 'suggest a yield strategy'." };
@@ -89,7 +96,7 @@ export class AIMemoryAgent {
       .eq('user_address', this.userAddress)
       .single();
 
-    const engine = new StrategyEngine(intent, patterns);
+    const engine = new StrategyEngine(intent, patterns, walletBalances);
     const strategy = engine.generateStrategy();
 
     if (!strategy) {
