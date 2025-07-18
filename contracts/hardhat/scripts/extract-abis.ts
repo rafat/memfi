@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 
 // ✅ Customize this list with your contract names (file and class names must match)
-const CONTRACTS = ["AMM", "LendingPool","MockERC20","MultiTokenPriceOracle","PortfolioTracker","Staking"];
+const CONTRACTS = ["AMM", "LendingPool","MockERC20","MultiTokenPriceOracle","PortfolioTracker","Staking", "Faucet"];
 
 // ✅ Directory to output ABI files — adjust if your frontend is in a different path
 const ABI_OUTPUT_DIR = path.join(__dirname, "./abis");
