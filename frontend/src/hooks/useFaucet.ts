@@ -2,37 +2,35 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { parseEther } from 'viem';
+import { useAccount, useReadContract, useWriteContract, useChainId, useWaitForTransactionReceipt } from 'wagmi';
+import { parseEther, type WriteContractParameters } from 'viem'; // <<< Import the type
 import { BDAG_TESTNET } from '@/lib/contracts';
-import { Faucet_ABI } from '@/lib/contracts/abis'; // You will need to add this ABI
+import { Faucet_ABI } from '@/lib/contracts/abis';
 import { Address } from 'viem';
+import { blockdagPrimordial } from '../chains';
 
 const FAUCET_ADDRESS = BDAG_TESTNET.contracts.Faucet as Address;
 const CLAIM_FEE = parseEther("0.1");
 
 export function useFaucet() {
   const { address } = useAccount();
+  const chainId = useChainId();
   const [cooldownRemaining, setCooldownRemaining] = useState(0);
 
-  // Hook for writing to the contract (claiming tokens)
   const { data: hash, isPending, error, writeContractAsync } = useWriteContract();
 
-  // Hook for reading the user's next available claim time
   const { data: nextClaimTime, refetch: refetchClaimTime } = useReadContract({
     address: FAUCET_ADDRESS,
     abi: Faucet_ABI,
     functionName: 'nextClaimTime',
     args: [address!],
     query: {
-      enabled: !!address, // Only run this query if the user is connected
+      enabled: !!address,
     }
   });
 
-  // Hook to wait for the transaction to be confirmed
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
   
-  // Effect to manage the countdown timer
   useEffect(() => {
     if (nextClaimTime) {
       const interval = setInterval(() => {
@@ -41,29 +39,33 @@ export function useFaucet() {
         setCooldownRemaining(remaining > 0 ? remaining : 0);
       }, 1000);
       
-      return () => clearInterval(interval); // Cleanup interval on component unmount
+      return () => clearInterval(interval);
     }
   }, [nextClaimTime]);
   
-  // Effect to refetch the claim time after a successful claim
   useEffect(() => {
     if (isConfirmed) {
       refetchClaimTime();
     }
   }, [isConfirmed, refetchClaimTime]);
 
-  // Main function to be called by the UI button
   const claimTokens = async () => {
     try {
-      await writeContractAsync({
+      // <<< FIX: Construct the request object with an explicit type
+      const request: WriteContractParameters = {
         address: FAUCET_ADDRESS,
         abi: Faucet_ABI,
         functionName: 'requestTokens',
-        value: CLAIM_FEE, // Send 0.1 BDAG with the transaction
-      });
+        value: CLAIM_FEE,
+        gas: 250000n, // Manually set a generous gas limit
+        account: address!,
+        chain: blockdagPrimordial,
+      };
+
+      await writeContractAsync(request);
+
     } catch (e) {
       console.error("Failed to send claim transaction:", e);
-      // The `error` state from the hook will be automatically populated.
     }
   };
 
@@ -72,11 +74,11 @@ export function useFaucet() {
   return {
     claimTokens,
     canClaim,
-    cooldownRemaining, // in seconds
-    isPending,        // Is the "Confirm" in wallet popup open?
-    isConfirming,     // Is the transaction mining?
-    isConfirmed,      // Was the transaction successful?
-    error,            // Any error that occurred
-    hash,             // The transaction hash
+    cooldownRemaining,
+    isPending,
+    isConfirming,
+    isConfirmed,
+    error,
+    hash,
   };
 }

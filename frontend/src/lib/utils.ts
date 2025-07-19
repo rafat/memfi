@@ -24,30 +24,56 @@ const bigIntReplacer = (key: string, value: any): any => {
  * 
  * @param {any} obj - The object to be stringified.
  * @returns {string} - A valid JSON string with all BigInts converted to strings.
- * 
- * @example
- * const dataFromContract = {
- *   positionId: 1,
- *   balance: 12345678901234567890n,
- *   details: { nestedBalance: 987n }
- * };
- * const jsonString = safeBigIntStringify(dataFromContract);
- * // jsonString will be:
- * // '{"positionId":1,"balance":"12345678901234567890","details":{"nestedBalance":"987"}}'
  */
 export function safeBigIntStringify(obj: any): string {
   return JSON.stringify(obj, bigIntReplacer);
 }
 
 /**
+ * Parses a wagmi/viem error object to extract the most user-friendly message.
+ * It safely checks for common properties like `shortMessage` first, then falls back
+ * to the standard `message` property. This prevents TypeScript errors and runtime crashes.
+ * 
+ * @param {any} e - The error object, which can be of various types from different libraries.
+ * @returns {string} - A clean, human-readable error message.
+ */
+export const getErrorMessage = (e: any): string => {
+  if (!e) return "An unknown error occurred.";
+  
+  // Wagmi and Viem often wrap the most specific error in a `cause` property.
+  // We prioritize checking the cause first.
+  const error = e.cause || e;
+
+  // Check for the common `shortMessage` property, which is usually the most readable.
+  if (typeof error === 'object' && error !== null && 'shortMessage' in error && typeof error.shortMessage === 'string') {
+    return error.shortMessage;
+  }
+  
+  // Fallback to the standard `message` property.
+  if (typeof error === 'object' && error !== null && 'message' in error && typeof error.message === 'string') {
+    return error.message;
+  }
+
+  // If the original error object (e) has a message, use that.
+  if (typeof e.message === 'string' && e.message) {
+    return e.message;
+  }
+  
+  // Final fallback for unexpected error structures.
+  return "An unexpected error occurred. Please check the console for more details.";
+};
+
+/**
  * A utility function to format an address for display by showing the first few
- * and last few characters.
+ * and last few characters (e.g., "0x1234...5678").
  * 
  * @param {string | undefined} address - The full Ethereum address.
- * @returns {string} - The truncated address (e.g., "0x1234...5678").
+ * @returns {string} - The truncated address or a fallback string.
  */
 export const formatAddress = (address?: string): string => {
   if (!address) return "No Address";
+  // Ensure it's a valid address format before slicing
+  if (address.length < 42) return address;
   return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
 };
 

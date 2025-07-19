@@ -10,10 +10,10 @@ export const blockdagPrimordial = {
   },
   rpcUrls: {
     default: {
-      http: ['https://rpc.primordial.bdagscan.com'],
+      http: ['https://test-rpc.primordial.bdagscan.com/'],
     },
     public: {
-      http: ['https://rpc.primordial.bdagscan.com'],
+      http: ['https://test-rpc.primordial.bdagscan.com/'],
     },
   },
   blockExplorers: {

@@ -25,7 +25,7 @@ const config: HardhatUserConfig = {
   },
   networks: {
     primordial: {
-      url: "https://rpc.primordial.bdagscan.com",
+      url: "https://test-rpc.primordial.bdagscan.com/",
       accounts: [process.env.DEPLOYER_PRIVATE_KEY || ""],
       chainId: 1043,
       gasPrice: 50000000000, // 50 gwei
